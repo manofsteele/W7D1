@@ -196,6 +196,97 @@ exports.default = Root;
 
 /***/ }),
 
+/***/ "./frontend/components/todos/todo_form.jsx":
+/*!*************************************************!*\
+  !*** ./frontend/components/todos/todo_form.jsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TodoForm = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _utils = __webpack_require__(/*! ../../util/utils */ "./frontend/util/utils.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TodoForm = exports.TodoForm = function (_React$Component) {
+  _inherits(TodoForm, _React$Component);
+
+  function TodoForm(props) {
+    _classCallCheck(this, TodoForm);
+
+    var _this = _possibleConstructorReturn(this, (TodoForm.__proto__ || Object.getPrototypeOf(TodoForm)).call(this, props));
+
+    _this.state = {
+      title: "",
+      body: "",
+      id: ""
+    };
+    _this.handleInputTitle = _this.handleInputTitle.bind(_this);
+    _this.handleInputBody = _this.handleInputBody.bind(_this);
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
+    return _this;
+  }
+
+  _createClass(TodoForm, [{
+    key: 'handleInputTitle',
+    value: function handleInputTitle(e) {
+      e.preventDefault();
+      this.setState({ title: e.target.value });
+    }
+  }, {
+    key: 'handleInputBody',
+    value: function handleInputBody(e) {
+      e.preventDefault();
+      this.setState({ body: e.target.value });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      // debugger;
+      // const id = uniqueId();
+      this.props.receiveTodo({ title: this.state.title,
+        body: this.state.body,
+        id: (0, _utils.uniqueId)()
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'form',
+        { onSubmit: this.handleSubmit },
+        _react2.default.createElement('input', { value: this.state.title, onChange: this.handleInputTitle }),
+        _react2.default.createElement('input', { value: this.state.body, onChange: this.handleInputBody }),
+        _react2.default.createElement('input', { type: 'submit', value: 'Submit' })
+      );
+    }
+  }]);
+
+  return TodoForm;
+}(_react2.default.Component);
+
+/***/ }),
+
 /***/ "./frontend/components/todos/todo_list.jsx":
 /*!*************************************************!*\
   !*** ./frontend/components/todos/todo_list.jsx ***!
@@ -206,22 +297,43 @@ exports.default = Root;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TodoList = undefined;
+
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _selectors = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module '../reducers/selectors'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+var _selectors = __webpack_require__(/*! ../../reducers/selectors */ "./frontend/reducers/selectors.js");
 
-var _selectors2 = _interopRequireDefault(_selectors);
+var _todo_list_item = __webpack_require__(/*! ./todo_list_item */ "./frontend/components/todos/todo_list_item.jsx");
+
+var _todo_form = __webpack_require__(/*! ./todo_form */ "./frontend/components/todos/todo_form.jsx");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-module.exports = function (_ref) {
-  var todos = _ref.todos;
+// module.exports = ({todos}) => (<ul>
+//   Hello again
+// </ul>);
+
+var TodoList = exports.TodoList = function TodoList(_ref) {
+  var todos = _ref.todos,
+      receiveTodo = _ref.receiveTodo;
+
+  // const { todos } = props;
   return _react2.default.createElement(
-    'ul',
+    'div',
     null,
-    todos
+    _react2.default.createElement(
+      'ul',
+      null,
+      todos.map(function (todo) {
+        return _react2.default.createElement(_todo_list_item.TodoListItem, { key: todo.id, todo: todo });
+      })
+    ),
+    _react2.default.createElement(_todo_form.TodoForm, { receiveTodo: receiveTodo })
   );
 };
 
@@ -245,9 +357,7 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 
 var _todo_list = __webpack_require__(/*! ./todo_list */ "./frontend/components/todos/todo_list.jsx");
 
-var _todo_list2 = _interopRequireDefault(_todo_list);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+// added { }
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
@@ -273,7 +383,38 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   };
 };
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_todo_list2.default);
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_todo_list.TodoList);
+
+/***/ }),
+
+/***/ "./frontend/components/todos/todo_list_item.jsx":
+/*!******************************************************!*\
+  !*** ./frontend/components/todos/todo_list_item.jsx ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TodoListItem = undefined;
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TodoListItem = exports.TodoListItem = function TodoListItem(props) {
+  return _react2.default.createElement(
+    'li',
+    null,
+    props.todo.title
+  );
+};
 
 /***/ }),
 
@@ -462,6 +603,25 @@ document.addEventListener("DOMContentLoaded", function () {
   window.allTodos = _selectors2.default;
   _reactDom2.default.render(_react2.default.createElement(_root2.default, { store: store }), root);
 });
+
+/***/ }),
+
+/***/ "./frontend/util/utils.js":
+/*!********************************!*\
+  !*** ./frontend/util/utils.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var uniqueId = exports.uniqueId = function uniqueId() {
+  return new Date().getTime();
+};
 
 /***/ }),
 
